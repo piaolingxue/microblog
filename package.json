@@ -5,6 +5,7 @@
     "dependencies": {
         "express": "2.5.4", 
         "ejs": ">= 0.0.1",
+        "connect-mongo": ">= 0.1.7",
         "mongodb": ">= 0.9.9"
     }
 }
