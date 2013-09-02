@@ -1,11 +1,12 @@
 {
-    "name": "application-name", 
-    "version": "0.0.1", 
+    "name": "micro-blog", 
+    "version": "0.2.3", 
     "private": true, 
     "dependencies": {
-        "express": "2.5.4", 
+        "express": "= 2.5.9",
         "ejs": ">= 0.0.1",
-        "connect-mongo": ">= 0.1.7",
-        "mongodb": ">= 0.9.9"
+        "connect-mongo": "= 0.1.7",
+        "connect": ">=1.0.3",
+        "mongodb": ">=0.8.0"
     }
 }
