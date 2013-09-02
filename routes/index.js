@@ -27,7 +27,7 @@ exports.user = function(req, res){
                 res.redirect('/');
             }
             
-            res.render({
+            res.render('user', {
                 title: user.name,
                 posts: posts
             });
