@@ -15,7 +15,24 @@ exports.index = function(req, res){
 
 
 exports.user = function(req, res){
-    
+    User.get(req.params.user, function(err, user){
+        if (err){
+            req.flash('error', '用户不存在');
+            res.redirect('/');
+        }
+        
+        Post.get(user.name, function(err, posts){
+            if (err){
+                req.flash('error', err);
+                res.redirect('/');
+            }
+            
+            res.render({
+                title: user.name,
+                posts: posts
+            });
+        });
+    });
 };
 
 exports.post = function(req, res){
