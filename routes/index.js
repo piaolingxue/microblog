@@ -32,14 +32,13 @@ exports.doReg = function(req, res){
     
     var md5 = crypto.createHash('md5');
     var password = md5.update(req.body.password).digest('base64');
-    console.log('password' + password);
     var newUser = new User({
         name: req.body.username,
         password: password
     });
 
     // check if exist this user
-    User.get(newUser.username, function(err, user){
+    User.get(newUser.name, function(err, user){
         if (user){
             err = 'Username already exists!';
         }
@@ -63,16 +62,38 @@ exports.doReg = function(req, res){
 };
 
 exports.login = function(req, res){
-    
+    res.render('login', {
+        title: '用户登入'
+    });
 };
 
 exports.doLogin = function(req, res){
-    
+    var md5 = crypto.createHash('md5');
+    var password = md5.update(req.body.password).digest('base64');
+
+    User.get(req.body.username, function(err, user){
+        if (!user){
+            req.flash('error', '用户登录失败');
+            return res.redirect('/login');
+        }
+
+        if (user.password != password){
+            req.flash('error', '用户密码错误');
+            return res.redirect('/login');
+        }
+
+        req.session.user = user;
+        req.flash('success', '登录成功');
+        return res.redirect('/');
+    });
 };
 
 exports.logout = function(req, res){
-    
+    req.session.user = null;
+    req.flash('success', '登出成功');
+    res.redirect('/');
 };
+
 
 
 
