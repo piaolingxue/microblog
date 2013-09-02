@@ -7,7 +7,7 @@ var express = require('express'),
     routes = require('./routes');
 
 var MongoStore = require('connect-mongo');
-var settings = require('settings');
+var settings = require('./settings');
 
 
 
@@ -27,7 +27,7 @@ app.configure(function(){
         secret: settings.cookieSecret,
         store: new MongoStore({
             db: settings.db
-        });
+        })
     }));
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
