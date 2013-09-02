@@ -41,16 +41,61 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
+app.dynamicHelpers({
+    user: function(req, res){
+        return req.session.user;
+    },
+
+    error: function(req, res){
+        var err = req.flash('error');
+
+        if (err.length){
+            return err;
+        }
+        else {
+            return null;
+        }
+    },
+
+    success: function(req, res){
+        var succ = req.flash('success');
+
+        if (succ.length){
+            return succ;
+        }
+        else {
+            return null;
+        }
+    }
+});
+
+function checkNotLogin(req, res, next){
+    if (req.session.user){
+        req.flash('error', '已登入');
+        return res.redirect('/');
+    }
+    next();
+};
+
+
+function checkLogin(req, res, next){
+    if (!req.session.user){
+        req.flash('error', '未登入');
+        return res.redirect('/login');
+    }
+    next();
+};
+
 // Routes
 
 app.get('/', routes.index);
 app.get('/u/:user', routes.user);
-app.post('/post', routes.post);
-app.get('/reg', routes.reg);
-app.post('/reg', routes.doReg);
-app.get('/login', routes.login);
-app.post('/login', routes.doLogin);
-app.get('/logout', routes.logout);
+app.post('/post', checkLogin, routes.post);
+app.get('/reg', checkNotLogin, routes.reg);
+app.post('/reg', checkNotLogin, routes.doReg);
+app.get('/login', checkNotLogin, routes.login);
+app.post('/login', checkNotLogin, routes.doLogin);
+app.get('/logout', checkLogin, routes.logout);
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
